@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RUD">
+<link rel="apple-touch-icon" id="ico" href="">
+<title>RUD</title>
+<style>
+:root{--bg:#000;--card:#111;--line:#262626;--y:#FFD60A;--t:#f2f2f2;--m:#8a8a8a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:#000}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--t);font-family:-apple-system,"SF Pro Text","Segoe UI",Tahoma,sans-serif;min-height:100vh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 8px}
+.logo{font-weight:800;font-size:28px;letter-spacing:4px;color:var(--y)}
+.add{width:40px;height:40px;border-radius:50%;background:var(--y);color:#000;font-size:26px;font-weight:700;line-height:1}
+section{padding:14px 0 8px}
+h2{font-size:16px;margin:0 18px 10px;color:var(--y);font-weight:700}
+.row{display:flex;gap:10px;overflow-x:auto;padding:0 18px 4px;scrollbar-width:none}
+.row::-webkit-scrollbar{display:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding:0 18px}
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:84px;display:flex;flex-direction:column;justify-content:flex-end;text-align:start;overflow:hidden}
+.row .card{flex:0 0 150px}
+.card:active{border-color:var(--y)}
+.card b{font-size:15px;line-height:1.3;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card small{color:var(--m);font-size:12px;margin-top:4px}
+.card .bar{position:absolute;bottom:0;inset-inline:0;height:3px;background:var(--line)}
+.card .bar i{display:block;height:100%;background:var(--y)}
+.empty{color:var(--m);font-size:13px;padding:0 18px}
+.x{position:absolute;top:6px;inset-inline-end:6px;width:26px;height:26px;border-radius:50%;color:var(--m);font-size:15px}
+.page{position:fixed;inset:0;background:#000;z-index:20;overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);display:none}
+.page.on{display:block}
+.bar2{display:flex;align-items:center;gap:8px;padding:14px 12px}
+.bar2 h1{flex:1;font-size:20px;margin:0;color:var(--y)}
+.ic{width:40px;height:40px;border-radius:50%;font-size:20px;color:var(--t)}
+.chips{display:flex;gap:8px;padding:4px 18px 12px;overflow-x:auto;scrollbar-width:none}
+.chip{padding:7px 14px;border-radius:20px;border:1px solid var(--line);white-space:nowrap;font-size:14px;color:var(--m)}
+.chip.on{background:var(--y);color:#000;border-color:var(--y);font-weight:700}
+.ep{display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:1px solid var(--line)}
+.ep .n{width:34px;height:34px;border-radius:50%;background:var(--y);color:#000;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.ep .tx{flex:1;text-align:start;min-width:0}
+.ep .tx small{display:block;color:var(--m);font-size:12px;direction:ltr;text-align:start;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pl{z-index:40;background:#000;display:none;flex-direction:column;position:fixed;inset:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#pl.on{display:flex}
+#pl .top{display:flex;align-items:center;gap:8px;padding:10px 12px}
+#pl .ttl{flex:1;min-width:0}
+#pl .ttl b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pl .ttl small{color:var(--y);font-size:13px}
+video{flex:1;min-height:0;width:100%;background:#000}
+.ctl{padding:10px 20px 22px;direction:ltr}
+.ctl input{width:100%;accent-color:var(--y);margin:0}
+.tm{display:flex;justify-content:space-between;color:var(--m);font-size:12px;margin:2px 0 8px}
+.btns{display:flex;align-items:center;justify-content:center;gap:28px}
+.skip{width:56px;height:56px;border-radius:50%;border:1.5px solid var(--y);color:var(--y);font-weight:700;font-size:14px}
+.pp{width:72px;height:72px;border-radius:50%;background:var(--y);color:#000;font-size:28px}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:30;display:none;align-items:flex-end}
+.sheet.on{display:flex}
+.box{width:100%;background:#0d0d0d;border-top:1px solid var(--line);border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));max-height:90%;overflow-y:auto}
+.seg{display:flex;gap:8px;margin-bottom:14px}
+.seg button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);color:var(--m)}
+.seg button.on{background:var(--y);color:#000;font-weight:700;border-color:var(--y)}
+label{display:block;font-size:13px;color:var(--m);margin:10px 0 5px}
+input[type=text],input[type=number]{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#000;color:var(--t);font:inherit;font-size:16px}
+.two{display:flex;gap:10px}.two>div{flex:1}
+.go{width:100%;margin-top:16px;padding:14px;border-radius:12px;background:var(--y);color:#000;font-weight:800;font-size:16px}
+.go:disabled{opacity:.5}
+#fn{font-size:13px;color:var(--m);margin-top:6px}
+.card.p{aspect-ratio:2/3;background-size:cover;background-position:center;justify-content:flex-end}.card.p b,.card.p small{text-shadow:0 1px 3px #000}.grid>div>.card{width:100%;height:100%}
+</style>
+</head>
+<body>
+<header><div class="logo">RUD</div><div style="display:flex;gap:10px;align-items:center"><button class="ic" id="gear" aria-label="الإعدادات" style="color:var(--m)">⚙</button><button class="add" id="addb" aria-label="إضافة">+</button></div></header>
+<div id="st" class="empty" style="color:#ff6b6b;padding:0 18px 6px"></div>
+<main id="home"></main>
+
+<div class="page" id="ser"></div>
+
+<div id="pl">
+  <div class="top"><button class="ic" id="cl">✕</button><div class="ttl"><b id="pt"></b><small id="ps"></small></div></div>
+  <video id="v" playsinline webkit-playsinline></video>
+  <div class="ctl">
+    <input type="range" id="sk" min="0" max="1000" value="0">
+    <div class="tm"><span id="cur">0:00</span><span id="dur">0:00</span></div>
+    <div class="btns">
+      <button class="skip" id="b10">-10</button>
+      <button class="pp" id="pp">▶</button>
+      <button class="skip" id="f10">+10</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="sh"><div class="box">
+  <div class="seg"><button id="tm" class="on">فيلم</button><button id="ts">مسلسل</button><button id="ta">أنمي</button></div>
+  <label>اسم العرض</label><input type="text" id="sn">
+  <label>صورة البوستر</label>
+  <input type="file" id="pf" accept="image/*" style="color:var(--t);width:100%">
+  <button class="go" id="save">تم</button>
+  <button class="go" id="cx" style="background:none;color:var(--m);margin-top:6px">إلغاء</button>
+</div></div>
+
+<div class="sheet" id="sh2"><div class="box">
+  <div id="sf2" class="two"><div><label>رقم الموسم</label><input type="number" id="se" value="1" min="1"></div>
+  <div><label>أول حلقة</label><input type="number" id="ep" value="1" min="1"></div></div>
+  <div id="fdw"><label>اختر فولدر الحلقات</label>
+  <input type="file" id="fd" webkitdirectory multiple style="color:var(--t);width:100%"></div>
+  <label id="fl">أو اختر ملفات فيديو</label>
+  <input type="file" id="f" accept="video/*" multiple style="color:var(--t);width:100%">
+  <div id="fn"></div>
+  <button class="go" id="save2">تم</button>
+  <button class="go" id="cx2" style="background:none;color:var(--m);margin-top:6px">إلغاء</button>
+</div></div>
+
+<div class="sheet" id="cf"><div class="box">
+  <div id="cm" style="color:#ff6b6b;font-size:13px"></div>
+  <label>رابط السيرفر (Worker)</label><input type="text" id="ca" placeholder="https://rud.xxxx.workers.dev" autocapitalize="off" autocorrect="off" style="direction:ltr">
+  <label>كلمة السر</label><input type="text" id="ck" autocapitalize="off" autocorrect="off" style="direction:ltr">
+  <button class="go" id="csv">حفظ</button>
+  <button class="go" id="ccx" style="background:none;color:var(--m);margin-top:6px">إلغاء</button>
+</div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const fmt=s=>{s=Math.max(0,s|0);const h=s/3600|0,m=(s%3600)/60|0,x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
+let items=[],type='m',curSer=null,curSeason=1,cur=null,url=null,lastSave=0,drag=false;
+
+/* icon */
+try{const c=document.createElement('canvas');c.width=c.height=180;const g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,180,180);g.fillStyle='#FFD60A';g.font='800 62px -apple-system,Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('RUD',90,92);$('#ico').href=c.toDataURL('image/png')}catch(e){}
+
+/* cloud storage (Cloudflare Worker + R2) */
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+const DEFAULT_API='';
+let API=(ls.get('rud_api')||DEFAULT_API).replace(/\/+$/,''),KEY=ls.get('rud_key')||'',lastSig='',saving=false;
+const setSt=t=>{$('#st').textContent=t};
+async function api(method,path,body,hdr){
+  const r=await fetch(API+path,{method,body,headers:{'X-Key':KEY,...(hdr||{})}});
+  if(r.status===401){openCfg('كلمة السر غير صحيحة');throw new Error('401')}
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r;
+}
+const JH={'Content-Type':'application/json'};
+const op=o=>api('POST','/api/op',JSON.stringify(o),JH);
+const putMeta=m=>op({put:[m]}).catch(()=>{});
+const fileUrl=id=>`${API}/api/file/${id}?k=${encodeURIComponent(KEY)}`;
+const posterUrl=w=>`${API}/api/poster/${w.id}?k=${encodeURIComponent(KEY)}&v=${w.pv||0}`;
+const busy=()=>$('#pl').classList.contains('on')||document.querySelector('.sheet.on')||saving;
+async function pull(force){
+  if(!API||!KEY)return;
+  try{
+    const d=await (await api('GET','/api/library')).json();
+    setSt('');
+    const sig=JSON.stringify(d.items||{});
+    if(sig===lastSig&&!force)return;
+    lastSig=sig;items=Object.values(d.items||{});
+    ls.set('rud_cache',JSON.stringify(items));
+    render();
+  }catch(e){if(String(e.message)!=='401')setSt('تعذر الاتصال بالسيرفر')}
+}
+function openCfg(msg){$('#cm').textContent=msg||'';$('#ca').value=API;$('#ck').value=KEY;$('#cf').classList.add('on')}
+$('#gear').onclick=()=>openCfg('');
+$('#ccx').onclick=()=>$('#cf').classList.remove('on');
+$('#csv').onclick=()=>{
+  API=$('#ca').value.trim().replace(/\/+$/,'');KEY=$('#ck').value.trim();
+  if(!API||!KEY){$('#cm').textContent='اكتب الرابط وكلمة السر';return}
+  ls.set('rud_api',API);ls.set('rud_key',KEY);$('#cf').classList.remove('on');lastSig='';pull(true);
+};
+async function init(){
+  try{items=JSON.parse(ls.get('rud_cache')||'[]')}catch(e){items=[]}
+  render();
+  if(!API||!KEY)openCfg('');else pull(true);
+  setInterval(()=>{if(!document.hidden&&!busy())pull()},20000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!busy())pull()});
+}
+const workOf=m=>items.find(x=>x.id===m.w&&x.type==='w');
+const epsOf=w=>items.filter(i=>i.w===w.id&&i.type!=='w');
+async function uploadFile(id,f,prog){
+  const CH=40*1024*1024,ct=f.type||'video/mp4';
+  const {uploadId}=await (await api('POST',`/api/file/${id}?a=create`,JSON.stringify({ct}),JH)).json();
+  const parts=[],u=encodeURIComponent(uploadId);
+  try{
+    for(let off=0,n=1;off<f.size;off+=CH,n++){
+      const chunk=f.slice(off,off+CH);let ok=null;
+      for(let t=0;t<4&&!ok;t++){
+        try{ok=await (await api('PUT',`/api/file/${id}?a=part&u=${u}&n=${n}`,chunk)).json()}
+        catch(e){if(String(e.message)==='401')throw e;await new Promise(r=>setTimeout(r,1500*(t+1)))}
+      }
+      if(!ok)throw new Error('part failed');
+      parts.push(ok);prog(Math.min(100,Math.round((off+chunk.size)/f.size*100)));
+    }
+    await api('POST',`/api/file/${id}?a=done&u=${u}`,JSON.stringify({parts}),JH);
+  }catch(e){api('POST',`/api/file/${id}?a=abort&u=${u}`).catch(()=>{});throw e}
+}
+
+/* posters */
+function posterBlob(file){return new Promise(res=>{if(!file)return res(null);const im=new Image(),u=URL.createObjectURL(file);im.onload=()=>{const w=300,h=Math.round(im.height*w/im.width);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);URL.revokeObjectURL(u);c.toBlob(b=>res(b),'image/jpeg',.8)};im.onerror=()=>res(null);im.src=u})}
+function P(g){const p=g.find(x=>x&&x.hasPoster);return p?` class="card p" style="background-image:linear-gradient(transparent 45%,rgba(0,0,0,.9)),url('${esc(posterUrl(p))}')"`:' class="card"'}
+/* home */
+function title(m){return m.title}
+function sub(m){return m.type==='s'?`الموسم ${m.season} · الحلقة ${m.ep}`:''}
+function pct(m){return m.dur?Math.min(100,m.pos/m.dur*100):0}
+function render(){
+  const rec=items.filter(i=>i.type!=='w'&&i.played).sort((a,b)=>b.played-a.played).slice(0,12);
+  const ws=items.filter(i=>i.type==='w');
+  const byCat=c=>ws.filter(w=>w.cat===c).sort((a,b)=>a.title.localeCompare(b.title));
+  const ser=byCat('s'),ani=byCat('a'),mov=byCat('m');
+  const cards=(l,cnt)=>`<div class="grid">${l.map(w=>`<button${P([w])} data-ser="${w.id}"><b>${esc(w.title)}</b>${cnt?`<small>${epsOf(w).length} حلقة</small>`:''}</button>`).join('')}</div>`;
+  let h=`<section><h2>شُغّلت مؤخرًا</h2>`+(rec.length?`<div class="row">${rec.map(m=>`<button${P([workOf(m)].filter(Boolean))} data-play="${m.id}"><b>${esc(m.title)}</b><small>${sub(m)}</small><span class="bar"><i style="width:${pct(m)}%"></i></span></button>`).join('')}</div>`:`<div class="empty">لم تشغّل شيئًا بعد</div>`)+`</section>`;
+  h+=`<section><h2>المسلسلات</h2>`+(ser.length?cards(ser,1):`<div class="empty">لا توجد مسلسلات، اضغط + للإضافة</div>`)+`</section>`;
+  h+=`<section><h2>الأنمي</h2>`+(ani.length?cards(ani,1):`<div class="empty">لا يوجد أنمي، اضغط + للإضافة</div>`)+`</section>`;
+  h+=`<section><h2>الأفلام</h2>`+(mov.length?cards(mov,0):`<div class="empty">لا توجد أفلام، اضغط + للإضافة</div>`)+`</section>`;
+  $('#home').innerHTML=h;
+  if(curSer!==null)renderSeries();
+}
+
+/* series page */
+function renderSeries(){
+  const w=items.find(i=>i.id===curSer&&i.type==='w');
+  if(!w){$('#ser').classList.remove('on');curSer=null;return}
+  const eps=epsOf(w);
+  let body='';
+  if(!eps.length){body=`<div class="empty" style="padding:18px">المجلد فارغ، اضغط + للإضافة</div>`}
+  else if(w.cat==='m'){
+    body=eps.sort((a,b)=>a.added-b.added).map(e=>`<div class="ep"><button class="n" data-play="${e.id}">▶</button><button class="tx" data-play="${e.id}"><b>${esc(e.name)}</b></button><button class="ic" data-del="${e.id}" style="color:var(--m);font-size:16px">✕</button></div>`).join('');
+  }else{
+    const seasons=[...new Set(eps.map(e=>e.season))].sort((a,b)=>a-b);
+    if(!seasons.includes(curSeason))curSeason=seasons[0];
+    const list=eps.filter(e=>e.season===curSeason).sort((a,b)=>a.ep-b.ep);
+    body=`<div class="chips">${seasons.map(s=>`<button class="chip ${s===curSeason?'on':''}" data-season="${s}">الموسم ${s}</button>`).join('')}</div>
+  ${list.map(e=>`<div class="ep"><button class="n" data-play="${e.id}">${e.ep}</button><button class="tx" data-play="${e.id}"><b>الحلقة ${e.ep}</b><small>${esc(e.name)}</small></button><button class="ic" data-del="${e.id}" style="color:var(--m);font-size:16px">✕</button></div>`).join('')}`;
+  }
+  $('#ser').innerHTML=`<div class="bar2"><button class="ic" id="sb">→</button><h1>${esc(w.title)}</h1><button class="add" id="sa" aria-label="إضافة">+</button><button class="ic" id="sd" style="color:var(--m)">🗑</button></div>${body}`;
+  $('#ser').classList.add('on');
+}
+
+/* delete */
+async function del(id){
+  if(!confirm('حذف من المكتبة؟'))return;
+  try{await op({del:[id]})}catch(e){alert('تعذر الحذف، تأكد من الاتصال');return}
+  items=items.filter(i=>i.id!==id);render();
+}
+
+/* player */
+async function play(id){
+  const m=items.find(i=>i.id===id);if(!m)return;
+  cur=m;const v=$('#v');v.src=fileUrl(id);
+  $('#pt').textContent=m.title;$('#ps').textContent=sub(m);
+  $('#pl').classList.add('on');
+  v.onloadedmetadata=()=>{if(m.pos>5&&m.dur&&m.pos<v.duration-10)v.currentTime=m.pos};
+  v.play().catch(()=>{});
+  m.played=Date.now();putMeta(m);
+}
+function stop(){
+  const v=$('#v');if(cur){cur.pos=v.currentTime||0;cur.dur=v.duration||cur.dur;putMeta(cur)}
+  v.pause();v.removeAttribute('src');v.load();$('#pl').classList.remove('on');cur=null;render();
+}
+const v=$('#v');
+v.addEventListener('play',()=>$('#pp').textContent='❚❚');
+v.addEventListener('pause',()=>{$('#pp').textContent='▶';if(cur){cur.pos=v.currentTime;putMeta(cur)}});
+v.addEventListener('timeupdate',()=>{
+  if(!isFinite(v.duration))return;
+  $('#cur').textContent=fmt(v.currentTime);$('#dur').textContent=fmt(v.duration);
+  if(!drag)$('#sk').value=v.currentTime/v.duration*1000;
+  if(cur&&Date.now()-lastSave>5000){lastSave=Date.now();cur.pos=v.currentTime;cur.dur=v.duration;putMeta(cur)}
+});
+v.addEventListener('ended',()=>{
+  if(!cur)return;const m=cur;m.pos=0;putMeta(m);
+  if(m.type==='s'){
+    const l=items.filter(i=>i.type==='s'&&i.w===m.w).sort((a,b)=>a.season-b.season||a.ep-b.ep);
+    const n=l[l.findIndex(i=>i.id===m.id)+1];if(n){play(n.id);return}
+  }
+});
+$('#pp').onclick=()=>v.paused?v.play().catch(()=>{}):v.pause();
+$('#b10').onclick=()=>v.currentTime=Math.max(0,v.currentTime-10);
+$('#f10').onclick=()=>v.currentTime=Math.min(v.duration||1e9,v.currentTime+10);
+const sk=$('#sk');
+sk.addEventListener('input',()=>{drag=true;if(v.duration)v.currentTime=sk.value/1000*v.duration});
+sk.addEventListener('change',()=>drag=false);
+$('#cl').onclick=stop;
+
+/* add work sheet */
+function setType(t){type=t;$('#tm').classList.toggle('on',t==='m');$('#ts').classList.toggle('on',t==='s');$('#ta').classList.toggle('on',t==='a')}
+$('#tm').onclick=()=>setType('m');$('#ts').onclick=()=>setType('s');$('#ta').onclick=()=>setType('a');
+$('#addb').onclick=()=>{$('#sn').value='';$('#pf').value='';setType('m');$('#sh').classList.add('on')};
+$('#cx').onclick=()=>$('#sh').classList.remove('on');
+$('#save').onclick=async()=>{
+  const t=$('#sn').value.trim();
+  if(!t){alert('اكتب اسم العرض');return}
+  const btn=$('#save');btn.disabled=true;saving=true;
+  try{
+    const w={id:uid(),type:'w',cat:type,title:t,hasPoster:false,pv:Date.now(),added:Date.now()};
+    const pb=await posterBlob($('#pf').files[0]);
+    if(pb){await api('PUT','/api/poster/'+w.id,pb,{'Content-Type':'image/jpeg'});w.hasPoster=true}
+    await op({put:[w]});items.push(w);
+    $('#sh').classList.remove('on');
+  }catch(e){if(String(e.message)!=='401')alert('تعذر الحفظ، تأكد من الاتصال والإعدادات')}
+  btn.disabled=false;saving=false;render();
+};
+
+/* add episodes sheet (inside the folder) */
+const isVid=f=>(f.type||'').startsWith('video/')||/\.(mp4|m4v|mov|mkv|avi|webm|wmv|flv|3gp|ts|mpg|mpeg)$/i.test(f.name);
+const pickedFiles=()=>[...$('#fd').files,...$('#f').files].filter(isVid);
+function upd(){const n=pickedFiles().length;$('#fn').textContent=n?`${n} ملف محدد`:''}
+$('#fd').onchange=upd;$('#f').onchange=upd;
+function openAdd(){
+  const w=items.find(i=>i.id===curSer);if(!w)return;
+  const mv=w.cat==='m';
+  $('#fd').value='';$('#f').value='';$('#fn').textContent='';$('#se').value=1;$('#ep').value=1;
+  $('#sf2').style.display=mv?'none':'flex';
+  $('#fdw').style.display=mv?'none':'block';
+  $('#fl').textContent=mv?'ملف الفيلم':'أو اختر ملفات فيديو';
+  $('#sh2').classList.add('on');
+}
+$('#cx2').onclick=()=>$('#sh2').classList.remove('on');
+$('#save2').onclick=async()=>{
+  const w=items.find(i=>i.id===curSer);if(!w)return;
+  const files=pickedFiles();
+  if(!files.length){alert(w.cat==='m'?'اختر ملف الفيلم':'اختر فولدر فيه فيديوهات');return}
+  files.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+  const btn=$('#save2');btn.disabled=true;saving=true;
+  let wl=null;try{wl=await navigator.wakeLock.request('screen')}catch(e){}
+  let ep=+$('#ep').value||1;const season=+$('#se').value||1;let i=0;
+  try{
+    for(const f of files){
+      i++;const lbl=`جارٍ الرفع ${i}/${files.length}`;btn.textContent=lbl;
+      const m={id:uid(),w:w.id,type:w.cat==='m'?'m':'s',anime:w.cat==='a',title:w.title,name:f.name,added:Date.now(),pos:0,dur:0,played:0};
+      if(w.cat!=='m'){m.season=season;m.ep=ep++}
+      await uploadFile(m.id,f,p=>btn.textContent=`${lbl} · ${p}%`);
+      await op({put:[m]});items.push(m);
+    }
+  }catch(e){if(String(e.message)!=='401')alert('تعذر الرفع، تأكد من الاتصال. الحلقات اللي انرفعت قبل الخطأ محفوظة.')}
+  try{wl&&wl.release()}catch(e){}
+  btn.disabled=false;saving=false;btn.textContent='تم';
+  if(w.cat!=='m')curSeason=season;
+  $('#sh2').classList.remove('on');render();
+};
+
+/* clicks */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-play],[data-ser],[data-del],[data-season],#sb,#sd,#sa');if(!t)return;
+  if(t.dataset.play)play(t.dataset.play);
+  else if(t.dataset.del)del(t.dataset.del);
+  else if(t.dataset.ser){curSer=t.dataset.ser;curSeason=1;renderSeries()}
+  else if(t.dataset.season){curSeason=+t.dataset.season;renderSeries()}
+  else if(t.id==='sa')openAdd();
+  else if(t.id==='sb'){$('#ser').classList.remove('on');curSer=null}
+  else if(t.id==='sd'){
+    if(!confirm('حذف المجلد كاملًا؟'))return;
+    const ids=items.filter(i=>i.w===curSer||i.id===curSer).map(i=>i.id);
+    op({del:ids}).catch(()=>{});
+    items=items.filter(i=>!ids.includes(i.id));$('#ser').classList.remove('on');curSer=null;render();
+  }
+});
+init();
+</script>
+</body>
+</html>
